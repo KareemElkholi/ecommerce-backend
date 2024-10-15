@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta, timezone
 from os import getenv
-from typing import Annotated
 
-from fastapi import Depends, status
-from fastapi.exceptions import HTTPException
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-
 from jwt import decode, encode
 from jwt.exceptions import InvalidTokenError
+
+from app.config.exceptions import permission_exception, token_exception
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -18,13 +17,14 @@ def create_token(data: dict):
     return encode(data, getenv("SECRET_KEY"), algorithm=getenv("ALGORITHM"))
 
 
-def read_token(token: Annotated[str, Depends(oauth2_scheme)]):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+def verify_token(token: str = Depends(oauth2_scheme)):
     try:
         return decode(token, getenv("SECRET_KEY"), algorithms=[getenv("ALGORITHM")])
     except InvalidTokenError:
-        raise credentials_exception
+        raise token_exception
+
+
+def verify_permission(payload: dict = Depends(verify_token)):
+    if payload.get("role") != "admin":
+        raise permission_exception
+    return payload
