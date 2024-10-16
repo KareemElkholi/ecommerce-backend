@@ -1,18 +1,19 @@
-from app.models.base import Base
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import ForeignKey, String, text
-from datetime import datetime
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, text
+
+from app.config.database import Base
 
 
 class Address(Base):
     __tablename__ = "addresses"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
-    building: Mapped[str] = mapped_column(String(60))
-    street: Mapped[str] = mapped_column(String(60))
-    district: Mapped[str] = mapped_column(String(60))
-    city: Mapped[str] = mapped_column(String(60))
-    governorate: Mapped[str] = mapped_column(String(60))
-    phone: Mapped[str] = mapped_column(String(15))
-    created_at: Mapped[datetime] = mapped_column(server_default=text("CURRENT_TIMESTAMP"))
-    updated_at: Mapped[datetime] = mapped_column(server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(ForeignKey("users.id", ondelete="CASCADE"))
+    building = Column(String(60))
+    street = Column(String(60))
+    district = Column(String(60))
+    city = Column(String(60))
+    governorate = Column(String(60))
+    country = Column(String(60))
+    phone = Column(String(15))
+    created_at = Column(DateTime, server_default=text("NOW()"))
+    updated_at = Column(DateTime, server_default=text("NOW() ON UPDATE NOW()"))

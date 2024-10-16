@@ -1,8 +1,8 @@
 from enum import Enum as PyEnum
-from app.models.base import Base
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Enum, text
-from datetime import datetime
+
+from sqlalchemy import Column, DateTime, Enum, Integer, String, text
+
+from app.config.database import Base
 
 
 class Role(PyEnum):
@@ -12,10 +12,11 @@ class Role(PyEnum):
 
 class User(Base):
     __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(30), unique=True)
-    password: Mapped[str] = mapped_column(String(60))
-    name: Mapped[str] = mapped_column(String(60))
-    role: Mapped[Role] = mapped_column(Enum(Role), default=Role.USER)
-    created_at: Mapped[datetime] = mapped_column(server_default=text("CURRENT_TIMESTAMP"))
-    updated_at: Mapped[datetime] = mapped_column(server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(30), unique=True, index=True)
+    password = Column(String(120))
+    name = Column(String(60))
+    role = Column(Enum(Role), server_default="USER")
+    created_at = Column(DateTime, server_default=text("NOW()"))
+    updated_at = Column(DateTime, server_default=text("NOW() ON UPDATE NOW()"))

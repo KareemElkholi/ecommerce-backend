@@ -1,16 +1,16 @@
-from app.models.base import Base
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import ForeignKey, String, CheckConstraint, Text, text
-from datetime import datetime
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, text
+
+from app.config.database import Base
 
 
 class Review(Base):
     __tablename__ = "reviews"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
-    product_id: Mapped[int] = mapped_column(ForeignKey("products.id", ondelete="CASCADE"))
-    title: Mapped[str] = mapped_column(String(60))
-    rating: Mapped[int] = mapped_column(CheckConstraint("rating between 1 and 5"))
-    comment: Mapped[str] = mapped_column(Text)
-    created_at: Mapped[datetime] = mapped_column(server_default=text("CURRENT_TIMESTAMP"))
-    updated_at: Mapped[datetime] = mapped_column(server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(ForeignKey("users.id", ondelete="CASCADE"))
+    product_id = Column(ForeignKey("products.id", ondelete="CASCADE"))
+    rating = Column(Integer)
+    title = Column(String(60))
+    comment = Column(Text)
+    created_at = Column(DateTime, server_default=text("NOW()"))
+    updated_at = Column(DateTime, server_default=text("NOW() ON UPDATE NOW()"))
