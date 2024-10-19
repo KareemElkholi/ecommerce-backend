@@ -11,7 +11,7 @@ class AddressCreate(BaseModel):
     city: str = Field(min_length=1, max_length=60)
     governorate: str = Field(min_length=1, max_length=60)
     country: str = Field(min_length=1, max_length=60)
-    phone: str = Field(regex=r"^\d{1,15}$")
+    phone: str = Field(pattern=r"^\d{1,15}$")
 
 
 class Address(AddressCreate):
@@ -29,4 +29,8 @@ class AddressUpdate(BaseModel):
     city: Optional[str] = Field(None, min_length=1, max_length=60)
     governorate: Optional[str] = Field(None, min_length=1, max_length=60)
     country: Optional[str] = Field(None, min_length=1, max_length=60)
-    phone: Optional[str] = Field(None, regex=r"^\d{1,15}$")
+    phone: Optional[str] = Field(None, pattern=r"^\d{1,15}$")
+
+
+class AddressDelete(BaseModel):
+    id: int
