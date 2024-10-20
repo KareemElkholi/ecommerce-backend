@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class CartItemCreate(BaseModel):
     product_id: int
-    quantity: int
+    quantity: int = Field(ge=1)
 
 
 class CartItem(CartItemCreate):
@@ -17,4 +17,8 @@ class CartItem(CartItemCreate):
 
 class CartItemUpdate(BaseModel):
     product_id: int
-    quantity: int
+    quantity: int = Field(ge=1)
+
+
+class CartItemDelete(BaseModel):
+    product_id: int

@@ -23,6 +23,11 @@ not_found_exception = HTTPException(
     detail="Not Found",
 )
 
+exists_exception = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Already exists",
+)
+
 server_exception = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Internal server error",
