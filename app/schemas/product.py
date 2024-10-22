@@ -27,3 +27,7 @@ class ProductUpdate(BaseModel):
     stock: Optional[int] = None
     price: Optional[int] = None
     discount: Optional[int] = None
+
+
+class ProductDelete(BaseModel):
+    id: int
