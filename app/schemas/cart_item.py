@@ -16,9 +16,4 @@ class CartItem(CartItemCreate):
 
 
 class CartItemUpdate(BaseModel):
-    product_id: int
     quantity: int = Field(ge=1)
-
-
-class CartItemDelete(BaseModel):
-    product_id: int

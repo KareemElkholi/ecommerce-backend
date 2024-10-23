@@ -7,7 +7,7 @@ from app.config.auth import verify_token
 from app.config.database import get_db
 from app.config.exceptions import exists_exception, not_found_exception, server_exception
 from app.crud.cart_item import CRUDCartItem
-from app.schemas.cart_item import CartItem, CartItemCreate, CartItemDelete, CartItemUpdate
+from app.schemas.cart_item import CartItem, CartItemCreate, CartItemUpdate
 
 router = APIRouter(prefix="/cart_items", tags=["CartItem"])
 
@@ -32,10 +32,20 @@ def get_cart_items(db=Depends(get_db), payload=Depends(verify_token)):
         raise server_exception
 
 
-@router.put("/", response_model=CartItem)
-def update_cart_item(cart_item: CartItemUpdate, db=Depends(get_db), payload=Depends(verify_token)):
+@router.get("/{product_id}", response_model=CartItem)
+def get_cart_item(product_id: int, db=Depends(get_db), payload=Depends(verify_token)):
     try:
-        return CRUDCartItem.update_cart_item(db, payload["sub"], cart_item)
+        return CRUDCartItem.get_cart_item(db, payload["sub"], product_id)
+    except ValueError:
+        raise not_found_exception
+    except Exception:
+        raise server_exception
+
+
+@router.put("/{product_id}", response_model=CartItem)
+def update_cart_item(product_id: int, cart_item: CartItemUpdate, db=Depends(get_db), payload=Depends(verify_token)):
+    try:
+        return CRUDCartItem.update_cart_item(db, payload["sub"], product_id, cart_item)
     except ValueError:
         raise not_found_exception
     except Exception:
@@ -43,9 +53,9 @@ def update_cart_item(cart_item: CartItemUpdate, db=Depends(get_db), payload=Depe
 
 
 @router.delete("/", response_model=CartItem)
-def delete_cart_item(cart_item: CartItemDelete, db=Depends(get_db), payload=Depends(verify_token)):
+def delete_cart_item(product_id: int, db=Depends(get_db), payload=Depends(verify_token)):
     try:
-        return CRUDCartItem.delete_cart_item(db, payload["sub"], cart_item.product_id)
+        return CRUDCartItem.delete_cart_item(db, payload["sub"], product_id)
     except ValueError:
         raise not_found_exception
     except Exception:
