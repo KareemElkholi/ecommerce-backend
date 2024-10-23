@@ -27,10 +27,14 @@ class CRUDProduct():
             return db.query(Product).all()
         return db.query(Product).filter(Product.category_id == category_id).all()
 
-    def update_product(db: Session, product: ProductUpdate):
-        db_product = db.query(Product).filter(Product.id == product.id).first()
+    def get_product(db: Session, id: int):
+        db_product = db.query(Product).filter(Product.id == id).first()
         if db_product is None:
             raise ValueError
+        return db_product
+
+    def update_product(db: Session, id: int, product: ProductUpdate):
+        db_product = CRUDProduct.get_product(db, id)
         try:
             for key, value in product.model_dump(exclude_unset=True).items():
                 setattr(db_product, key, value)
@@ -41,9 +45,7 @@ class CRUDProduct():
             raise
 
     def delete_product(db: Session, id: int):
-        db_product = db.query(Product).filter(Product.id == id).first()
-        if db_product is None:
-            raise ValueError
+        db_product = CRUDProduct.get_product(db, id)
         try:
             db.delete(db_product)
             db.commit()

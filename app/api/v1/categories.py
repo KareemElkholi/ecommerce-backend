@@ -12,8 +12,8 @@ from app.schemas.category import Category, CategoryCreate, CategoryUpdate
 router = APIRouter(prefix="/categories", tags=["Category"])
 
 
-@router.post("/", response_model=Category)
-def create_category(category: CategoryCreate, db=Depends(get_db), payload=Depends(verify_permission)):
+@router.post("/", response_model=Category, dependencies=[Depends(verify_permission)])
+def create_category(category: CategoryCreate, db=Depends(get_db)):
     try:
         return CRUDCategory.create_category(db, category)
     except IntegrityError:
@@ -40,8 +40,8 @@ def get_category(id: int, db=Depends(get_db)):
         raise server_exception
 
 
-@router.put("/{id}", response_model=Category)
-def update_category(id: int, category: CategoryUpdate, db=Depends(get_db), payload=Depends(verify_permission)):
+@router.put("/{id}", response_model=Category, dependencies=[Depends(verify_permission)])
+def update_category(id: int, category: CategoryUpdate, db=Depends(get_db)):
     try:
         return CRUDCategory.update_category(db, id, category)
     except (ValueError, IntegrityError):
@@ -50,8 +50,8 @@ def update_category(id: int, category: CategoryUpdate, db=Depends(get_db), paylo
         raise server_exception
 
 
-@router.delete("/{id}", response_model=Category)
-def delete_category(id: int, db=Depends(get_db), payload=Depends(verify_permission)):
+@router.delete("/{id}", response_model=Category, dependencies=[Depends(verify_permission)])
+def delete_category(id: int, db=Depends(get_db)):
     try:
         return CRUDCategory.delete_category(db, id)
     except ValueError:

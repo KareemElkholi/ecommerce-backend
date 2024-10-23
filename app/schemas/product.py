@@ -20,14 +20,9 @@ class Product(ProductCreate):
 
 
 class ProductUpdate(BaseModel):
-    id: int
     category_id: Optional[int] = None
     name: Optional[str] = Field(None, min_length=1, max_length=60)
     description: Optional[str] = None
     stock: Optional[int] = None
     price: Optional[int] = None
     discount: Optional[int] = None
-
-
-class ProductDelete(BaseModel):
-    id: int
