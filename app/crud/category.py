@@ -24,10 +24,14 @@ class CRUDCategory():
             return db.query(Category).all()
         return db.query(Category).filter(Category.parent_id == parent_id).all()
 
-    def update_category(db: Session, category: CategoryUpdate):
-        db_category = db.query(Category).filter(Category.id == category.id).first()
+    def get_category(db: Session, id: int):
+        db_category = db.query(Category).filter(Category.id == id).first()
         if db_category is None:
             raise ValueError
+        return db_category
+
+    def update_category(db: Session, id: int, category: CategoryUpdate):
+        db_category = CRUDCategory.get_category(db, id)
         try:
             for key, value in category.model_dump(exclude_unset=True).items():
                 setattr(db_category, key, value)
@@ -38,9 +42,7 @@ class CRUDCategory():
             raise
 
     def delete_category(db: Session, id: int):
-        db_category = db.query(Category).filter(Category.id == id).first()
-        if db_category is None:
-            raise ValueError
+        db_category = CRUDCategory.get_category(db, id)
         try:
             db.delete(db_category)
             db.commit()

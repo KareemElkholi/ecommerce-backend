@@ -17,11 +17,6 @@ class Category(CategoryCreate):
 
 
 class CategoryUpdate(BaseModel):
-    id: int
     parent_id: Optional[int] = None
     name: Optional[str] = Field(None, min_length=1, max_length=30)
     description: Optional[str] = None
-
-
-class CategoryDelete(BaseModel):
-    id: int

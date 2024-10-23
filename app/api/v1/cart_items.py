@@ -52,7 +52,7 @@ def update_cart_item(product_id: int, cart_item: CartItemUpdate, db=Depends(get_
         raise server_exception
 
 
-@router.delete("/", response_model=CartItem)
+@router.delete("/{product_id}", response_model=CartItem)
 def delete_cart_item(product_id: int, db=Depends(get_db), payload=Depends(verify_token)):
     try:
         return CRUDCartItem.delete_cart_item(db, payload["sub"], product_id)

@@ -7,7 +7,7 @@ from app.config.auth import verify_permission
 from app.config.database import get_db
 from app.config.exceptions import not_found_exception, server_exception
 from app.crud.category import CRUDCategory
-from app.schemas.category import Category, CategoryCreate, CategoryDelete, CategoryUpdate
+from app.schemas.category import Category, CategoryCreate, CategoryUpdate
 
 router = APIRouter(prefix="/categories", tags=["Category"])
 
@@ -30,20 +30,30 @@ def get_categories(parent_id: Optional[int] = None, db=Depends(get_db)):
         raise server_exception
 
 
-@router.put("/", response_model=Category)
-def update_category(category: CategoryUpdate, db=Depends(get_db), payload=Depends(verify_permission)):
+@router.get("/{id}", response_model=Category)
+def get_category(id: int, db=Depends(get_db)):
     try:
-        return CRUDCategory.update_category(db, category)
+        return CRUDCategory.get_category(db, id)
+    except ValueError:
+        raise not_found_exception
+    except Exception:
+        raise server_exception
+
+
+@router.put("/{id}", response_model=Category)
+def update_category(id: int, category: CategoryUpdate, db=Depends(get_db), payload=Depends(verify_permission)):
+    try:
+        return CRUDCategory.update_category(db, id, category)
     except (ValueError, IntegrityError):
         raise not_found_exception
     except Exception:
         raise server_exception
 
 
-@router.delete("/", response_model=Category)
-def delete_category(category: CategoryDelete, db=Depends(get_db), payload=Depends(verify_permission)):
+@router.delete("/{id}", response_model=Category)
+def delete_category(id: int, db=Depends(get_db), payload=Depends(verify_permission)):
     try:
-        return CRUDCategory.delete_category(db, category.id)
+        return CRUDCategory.delete_category(db, id)
     except ValueError:
         raise not_found_exception
     except Exception:
