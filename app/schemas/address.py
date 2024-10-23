@@ -22,7 +22,6 @@ class Address(AddressCreate):
 
 
 class AddressUpdate(BaseModel):
-    id: int
     building: Optional[str] = Field(None, min_length=1, max_length=60)
     street: Optional[str] = Field(None, min_length=1, max_length=60)
     district: Optional[str] = Field(None, min_length=1, max_length=60)
@@ -30,7 +29,3 @@ class AddressUpdate(BaseModel):
     governorate: Optional[str] = Field(None, min_length=1, max_length=60)
     country: Optional[str] = Field(None, min_length=1, max_length=60)
     phone: Optional[str] = Field(None, pattern=r"^\d{1,15}$")
-
-
-class AddressDelete(BaseModel):
-    id: int
