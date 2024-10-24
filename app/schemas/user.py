@@ -26,3 +26,7 @@ class UserUpdate(BaseModel):
     username: Optional[str] = Field(None, pattern=r"^[A-Za-z0-9_]{1,30}$")
     name: Optional[str] = Field(None, min_length=1, max_length=60)
     password: Optional[str] = Field(None, min_length=8)
+
+
+class UserRole(BaseModel):
+    role: Role
