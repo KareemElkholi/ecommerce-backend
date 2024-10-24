@@ -20,7 +20,6 @@ class Order(OrderCreate):
 
 
 class OrderUpdate(BaseModel):
-    id: int
     status: Status
 
 

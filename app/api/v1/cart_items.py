@@ -28,6 +28,8 @@ def create_cart_item(cart_item: CartItemCreate, db=Depends(get_db), payload=Depe
 def get_cart_items(db=Depends(get_db), payload=Depends(verify_token)):
     try:
         return CRUDCartItem.get_cart_items(db, payload["sub"])
+    except ValueError:
+        raise not_found_exception
     except Exception:
         raise server_exception
 

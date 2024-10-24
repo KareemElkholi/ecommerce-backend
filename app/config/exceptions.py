@@ -1,6 +1,11 @@
 from fastapi import status
 from fastapi.exceptions import HTTPException
 
+shipped_exception = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="Order is shipped",
+)
+
 credentials_exception = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail="Invalid username or password",
@@ -26,6 +31,11 @@ not_found_exception = HTTPException(
 exists_exception = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="Already exists",
+)
+
+stock_exception = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Out of stock",
 )
 
 server_exception = HTTPException(

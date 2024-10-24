@@ -8,7 +8,7 @@ class ProductCreate(BaseModel):
     category_id: int
     name: str = Field(min_length=1, max_length=60)
     description: Optional[str] = None
-    stock: int
+    stock: int = Field(ge=0)
     price: int
     discount: int
 
@@ -23,6 +23,6 @@ class ProductUpdate(BaseModel):
     category_id: Optional[int] = None
     name: Optional[str] = Field(None, min_length=1, max_length=60)
     description: Optional[str] = None
-    stock: Optional[int] = None
+    stock: Optional[int] = Field(None, ge=0)
     price: Optional[int] = None
     discount: Optional[int] = None

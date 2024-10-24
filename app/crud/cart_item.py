@@ -23,10 +23,13 @@ class CRUDCartItem():
             raise
 
     def get_cart_items(db: Session, user_id: int):
-        return db.query(CartItem).filter(CartItem.user_id == user_id).all()
+        db_cart_items = db.query(CartItem).filter(CartItem.user_id == user_id).all()
+        if db_cart_items == []:
+            raise ValueError
+        return db_cart_items
 
     def get_cart_item(db: Session, user_id: int, product_id: int):
-        db_cart_item = db.query(CartItem).filter(CartItem.user_id == user_id, CartItem.product_id == product_id,).first()
+        db_cart_item = db.query(CartItem).filter(CartItem.user_id == user_id, CartItem.product_id == product_id).first()
         if db_cart_item is None:
             raise ValueError
         return db_cart_item
