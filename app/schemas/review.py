@@ -19,7 +19,6 @@ class Review(ReviewCreate):
 
 
 class ReviewUpdate(BaseModel):
-    product_id: int
     rating: Optional[int] = Field(None, ge=1, le=5)
     title: Optional[str] = Field(None, min_length=1, max_length=60)
     comment: Optional[str] = None
