@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.exc import IntegrityError
 
 from app.config.auth import verify_permission, verify_token
 from app.config.database import get_db
-from app.config.exceptions import not_found_exception, server_exception
+from app.config.exceptions import exists_exception, not_found_exception, server_exception
 from app.config.hashing import get_password_hash
 from app.crud.user import CRUDUser
 from app.schemas.user import User, UserCreate, UserUpdate, UserRole
@@ -15,6 +16,8 @@ def create_user(user: UserCreate, db=Depends(get_db)):
     try:
         user.password = get_password_hash(user.password)
         return CRUDUser.create_user(db, user)
+    except IntegrityError:
+        raise exists_exception
     except Exception:
         raise server_exception
 
