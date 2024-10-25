@@ -1,0 +1,23 @@
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-u$DB_USER", "-p$DB_PASS",  "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    restart: always
