@@ -83,14 +83,6 @@ openssl rand -hex 32
 - Cart functionality
 - Order processing
 
-## Development
-
-To run the development environment with hot reload:
-
-```bash
-docker compose -f docker-compose.dev.yml up
-```
-
 ## Contributing
 
 1. Fork the repository
